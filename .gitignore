@@ -44,3 +44,12 @@ backend/.venv/
 backend/.pytest_cache/
 backend/.mypy_cache/
 backend/.ruff_cache/
+
+# Ignore ML models
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# models/
