@@ -11,17 +11,17 @@ export default function MetricsCard({
 
       whileHover={{ scale: 1.05 }}
 
-      className="bg-white shadow rounded-xl p-4"
+      className="rounded-xl border border-white/10 bg-white/5 p-4"
 
     >
 
-      <h3 className="text-gray-500">
+      <h3 className="text-slate-300">
 
         {title}
 
       </h3>
 
-      <p className="text-2xl font-bold text-green-600">
+      <p className="text-2xl font-bold text-emerald-200">
 
         {value}
 

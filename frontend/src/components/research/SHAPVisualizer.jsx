@@ -1,5 +1,3 @@
-import Card from "../ui/Card";
-
 export default function SHAPVisualizer() {
 
   const shapData = [
@@ -22,42 +20,19 @@ export default function SHAPVisualizer() {
   ];
 
   return (
-
-    <Card>
-
-      <h2 className="font-bold mb-3">
-
-        SHAP Explanation
-
-      </h2>
-
-      {shapData.map((item, i) => (
-
-        <div
-
-          key={i}
-
-          className="flex justify-between mb-2 p-2 bg-green-50 rounded"
-
-        >
-
-          <span>
-
-            {item.feature}
-
-          </span>
-
-          <span className="font-bold">
-
-            {item.impact}
-
-          </span>
-
-        </div>
-
-      ))}
-
-    </Card>
-
+    <div>
+      <h2 className="mb-3 text-base font-semibold text-slate-100">SHAP Explanation</h2>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {shapData.map((item, i) => (
+          <div
+            key={i}
+            className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 text-sm"
+          >
+            <span>{item.feature}</span>
+            <span className="font-semibold text-emerald-200">{item.impact}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -24,8 +24,20 @@ def create_farm(
     db: Session = Depends(get_db)
 
 ):
+    payload = farm.dict()
+    farm_size_acres = payload.get("farm_size_acres")
+    if farm_size_acres is None:
+        farm_size_acres = payload.get("farm_size")
 
-    db_farm = Farm(**farm.dict())
+    # Map request schema fields to actual ORM model columns.
+    db_farm = Farm(
+        farmer_id=payload["farmer_id"],
+        farm_name=payload.get("farm_name"),
+        farm_size_acres=farm_size_acres,
+        soil_type=payload.get("soil_type"),
+        irrigation_type=payload.get("irrigation_type"),
+        water_source=payload.get("water_source")
+    )
 
     db.add(db_farm)
     db.commit()

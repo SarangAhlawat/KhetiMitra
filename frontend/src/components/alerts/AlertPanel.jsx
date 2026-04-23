@@ -15,34 +15,16 @@ export default function AlertPanel() {
   ];
 
   return (
-
-    <div className="bg-white rounded shadow p-4">
-
-      <h2 className="font-bold mb-3">
-
-        Alerts
-
-      </h2>
-
+    <div className="space-y-2">
       {alerts.map((a, i) => (
-
         <div
-
           key={i}
-
-          className="mb-2 p-2 rounded bg-red-100"
-
+          className="rounded-xl border border-rose-300/25 bg-rose-300/10 p-3 text-sm"
         >
-
-          <strong>{a.type}:</strong>
-
-          {a.message}
-
+          <p className="font-semibold text-rose-100">{a.type}</p>
+          <p className="text-slate-200">{a.message}</p>
         </div>
-
       ))}
-
     </div>
-
   );
 }

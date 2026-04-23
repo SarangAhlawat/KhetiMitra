@@ -3,7 +3,9 @@ import {
     Line,
     XAxis,
     YAxis,
-    Tooltip
+    Tooltip,
+    ResponsiveContainer,
+    CartesianGrid
 } from "recharts";
 
 export default function YieldTrendChart() {
@@ -18,25 +20,24 @@ export default function YieldTrendChart() {
     ];
 
     return (
-
-        <LineChart
-            width={400}
-            height={250}
-            data={data}
-        >
-
-            <XAxis dataKey="year" />
-
-            <YAxis />
-
-            <Tooltip />
-
-            <Line
-                type="monotone"
-                dataKey="yield"
-            />
-
-        </LineChart>
-
+        <div className="h-[240px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                    data={data}
+                    margin={{ top: 8, right: 12, left: 0, bottom: 0 }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <XAxis dataKey="year" stroke="#cbd5e1" />
+                    <YAxis stroke="#cbd5e1" />
+                    <Tooltip />
+                    <Line
+                        type="monotone"
+                        dataKey="yield"
+                        stroke="#34d399"
+                        strokeWidth={2}
+                    />
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
     );
 }

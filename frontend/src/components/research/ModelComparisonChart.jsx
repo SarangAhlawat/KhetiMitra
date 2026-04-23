@@ -3,7 +3,9 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid
 } from "recharts";
 
 export default function ModelComparisonChart() {
@@ -28,25 +30,16 @@ export default function ModelComparisonChart() {
   ];
 
   return (
-
-    <BarChart
-
-      width={500}
-      height={300}
-
-      data={data}
-
-    >
-
-      <XAxis dataKey="model" />
-
-      <YAxis />
-
-      <Tooltip />
-
-      <Bar dataKey="accuracy" />
-
-    </BarChart>
-
+    <div className="h-[280px] w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 12 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <XAxis dataKey="model" stroke="#cbd5e1" />
+          <YAxis stroke="#cbd5e1" />
+          <Tooltip />
+          <Bar dataKey="accuracy" fill="#34d399" radius={[6, 6, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
