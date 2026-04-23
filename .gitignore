@@ -1,0 +1,46 @@
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node / Vite
+node_modules/
+dist/
+build/
+coverage/
+frontend/node_modules/
+frontend/dist/
+
+# Project data and generated artifacts
+data/raw/*
+data/processed/*
+data/external/*
+data/knowledge_base/*
+backend/logs/
+backend/.venv/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.ruff_cache/

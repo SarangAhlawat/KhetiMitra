@@ -1,0 +1,8 @@
+from llm.rag_pipeline import rag_answer
+
+
+query = "What scheme supports drip irrigation?"
+
+response = rag_answer(query)
+
+print(response)
