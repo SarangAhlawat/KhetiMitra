@@ -3,7 +3,9 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid
 } from "recharts";
 
 export default function FeatureImportanceChart() {
@@ -19,30 +21,25 @@ export default function FeatureImportanceChart() {
   ];
 
   return (
-
-    <BarChart
-
-      width={500}
-      height={300}
-
-      data={data}
-
-      layout="vertical"
-
-    >
-
-      <XAxis type="number" />
-
-      <YAxis
-        dataKey="feature"
-        type="category"
-      />
-
-      <Tooltip />
-
-      <Bar dataKey="importance" />
-
-    </BarChart>
-
+    <div className="h-[280px] w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          layout="vertical"
+          margin={{ top: 8, right: 12, left: 30, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <XAxis type="number" stroke="#cbd5e1" />
+          <YAxis
+            dataKey="feature"
+            type="category"
+            stroke="#cbd5e1"
+            width={110}
+          />
+          <Tooltip />
+          <Bar dataKey="importance" fill="#22d3ee" radius={[0, 6, 6, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

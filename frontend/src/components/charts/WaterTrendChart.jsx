@@ -3,7 +3,9 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid
 } from "recharts";
 
 export default function WaterTrendChart() {
@@ -18,22 +20,16 @@ export default function WaterTrendChart() {
   ];
 
   return (
-
-    <BarChart
-      width={400}
-      height={250}
-      data={data}
-    >
-
-      <XAxis dataKey="year" />
-
-      <YAxis />
-
-      <Tooltip />
-
-      <Bar dataKey="water" />
-
-    </BarChart>
-
+    <div className="h-[240px] w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <XAxis dataKey="year" stroke="#cbd5e1" />
+          <YAxis stroke="#cbd5e1" />
+          <Tooltip />
+          <Bar dataKey="water" fill="#22d3ee" radius={[6, 6, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
