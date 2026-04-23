@@ -1,0 +1,7 @@
+{
+  "soil_health": 0.25,
+  "water": 0.20,
+  "chemical": 0.20,
+  "biodiversity": 0.20,
+  "economic": 0.15
+}
