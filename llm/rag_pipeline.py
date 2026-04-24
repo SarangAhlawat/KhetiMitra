@@ -30,7 +30,7 @@ logger = get_logger(__name__)
 
 
 def rag_answer(
-    query: str,
+    qullocalery: str,
     prompt_name: str = "farmer_query_prompt.txt"
 ):
 
