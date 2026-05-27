@@ -6,10 +6,14 @@ from app.utils.preprocessing import min_max_scale
 
 
 # Load weights
-with open(
-    "../models/qssm_model/qssm_weights.json"
-) as f:
+import os
 
+# Load weights - compute path relative to this file
+weights_path = os.path.join(
+    os.path.dirname(__file__),
+    "../../../models/qssm_model/qssm_weights.json"
+)
+with open(weights_path) as f:
     QSSM_WEIGHTS = json.load(f)
 
 

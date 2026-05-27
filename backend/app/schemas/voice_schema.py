@@ -10,3 +10,4 @@ class VoiceRequest(BaseModel):
 class VoiceResponse(BaseModel):
 
     response: str
+    short_reason: str | None = None

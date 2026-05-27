@@ -157,10 +157,17 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "https://khetimitra.vercel.app"
+        origin.strip()
+        for origin in os.getenv(
+            "CORS_ALLOW_ORIGINS",
+            "http://localhost:5173,http://127.0.0.1:5173,https://khetimitra.vercel.app"
+        ).split(",")
+        if origin.strip()
     ],
+    allow_origin_regex=os.getenv(
+        "CORS_ALLOW_ORIGIN_REGEX",
+        r"https://.*\.ngrok-free\.dev"
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

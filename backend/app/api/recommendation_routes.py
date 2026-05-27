@@ -1,6 +1,11 @@
 from fastapi import APIRouter
 
 from app.services.ml_service import predict_crop
+from app.services.llm_service import generate_response
+from app.services.rule_engine import (
+    get_practice_recommendations,
+    get_scheme_recommendations,
+)
 from pydantic import BaseModel
 
 
@@ -8,6 +13,10 @@ class RecommendationResponse(BaseModel):
 
     recommended_crop: str
     sustainability_score: float
+    short_reason: str
+    qssm_reason: str
+    sustainable_practices: list[str]
+    matching_schemes: list[str]
 
 
 class ExplanationFactor(BaseModel):
@@ -23,6 +32,10 @@ class RecommendationExplainResponse(BaseModel):
     recommended_crop: str
     sustainability_score: float
     confidence_score: float
+    short_reason: str
+    qssm_reason: str
+    sustainable_practices: list[str]
+    matching_schemes: list[str]
     explanation: list[ExplanationFactor]
 
 # router = APIRouter()
@@ -55,6 +68,52 @@ def estimate_sustainability_score(data: dict) -> float:
     score += 8 if 40 <= humidity <= 75 else -4
 
     return round(max(0.0, min(100.0, score)), 2)
+
+
+def build_qssm_reason(score: float) -> str:
+    if score >= 75:
+        return "QSSM is strong: soil-health and climate indicators are supportive for sustainable production."
+    if score >= 60:
+        return "QSSM is moderate: improve organic carbon and irrigation efficiency for stable long-term outcomes."
+    return "QSSM is weak: prioritize soil restoration and water-management practices before scale-up."
+
+
+def normalize_rule_profile(data: dict, crop: str) -> dict:
+    profile = dict(data)
+    profile["crop"] = crop
+    profile["land_size"] = float(data.get("area_hectares", 0) or 0)
+
+    rainfall = float(data.get("rainfall_mm", 600) or 600)
+    profile["water_condition"] = "Low" if rainfall < 500 else "Medium"
+
+    if profile["land_size"] <= 10:
+        profile.setdefault("farming_type", "Organic")
+
+    profile.setdefault("soil_testing", "No")
+    return profile
+
+
+def build_advisor_reason(data: dict, crop: str, qssm_score: float, practices: list[str], schemes: list[str]) -> str:
+    prompt = f"""
+You are an agricultural decision advisor.
+Return only one short reason (max 35 words) for why this recommendation suits the farmer.
+Mention sustainability and one practical next step.
+
+Recommended crop: {crop}
+QSSM score: {qssm_score}
+Soil pH: {data.get('ph')}
+Organic carbon: {data.get('organic_carbon_percent')}
+Rainfall mm: {data.get('rainfall_mm')}
+Suggested practices: {practices[:3]}
+Relevant schemes: {schemes[:3]}
+"""
+
+    try:
+        reason = generate_response(prompt, timeout=15).strip()
+        return reason.splitlines()[0][:220] if reason else "Recommendation is based on crop suitability, sustainability score, and matched farm-support practices."
+    except Exception as e:
+        # Fast fallback if Gemini is unavailable
+        return f"{crop} is recommended for your {qssm_score} sustainability score. Adopt {practices[0] if practices else 'sustainable practices'} and check {schemes[0] if schemes else 'govt schemes'} for support."
 
 
 def build_explanation(data: dict) -> list[dict]:
@@ -149,11 +208,20 @@ def estimate_confidence(data: dict, score: float) -> float:
 def get_recommendation(data: dict):
     qssm_score = estimate_sustainability_score(data)
     crop = predict_crop(data)
+    profile = normalize_rule_profile(data, crop)
+    practices = get_practice_recommendations(profile)[:3]
+    schemes = get_scheme_recommendations(profile)[:3]
+    qssm_reason = build_qssm_reason(qssm_score)
+    short_reason = build_advisor_reason(data, crop, qssm_score, practices, schemes)
 
     return {
 
         "recommended_crop": crop,
-        "sustainability_score": qssm_score
+        "sustainability_score": qssm_score,
+        "short_reason": short_reason,
+        "qssm_reason": qssm_reason,
+        "sustainable_practices": practices,
+        "matching_schemes": schemes,
 
     }
 
@@ -166,12 +234,21 @@ def explain_recommendation(data: dict):
 
     qssm_score = estimate_sustainability_score(data)
     crop = predict_crop(data)
+    profile = normalize_rule_profile(data, crop)
+    practices = get_practice_recommendations(profile)[:5]
+    schemes = get_scheme_recommendations(profile)[:5]
     explanation = build_explanation(data)
     confidence = estimate_confidence(data, qssm_score)
+    qssm_reason = build_qssm_reason(qssm_score)
+    short_reason = build_advisor_reason(data, crop, qssm_score, practices, schemes)
 
     return {
         "recommended_crop": crop,
         "sustainability_score": qssm_score,
         "confidence_score": confidence,
+        "short_reason": short_reason,
+        "qssm_reason": qssm_reason,
+        "sustainable_practices": practices,
+        "matching_schemes": schemes,
         "explanation": explanation
     }
