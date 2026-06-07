@@ -1,7 +1,7 @@
+from pathlib import Path
+
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-
-import os
 
 
 # Must match embedding used during index build
@@ -10,7 +10,8 @@ embedding_model = HuggingFaceEmbeddings(
 )
 
 
-BASE_DIR = "llm/vector_store"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = PROJECT_ROOT / "llm" / "vector_store"
 
 INDEX_NAMES = [
     "soil_index",
@@ -26,17 +27,14 @@ def load_indexes():
 
     for name in INDEX_NAMES:
 
-        path = os.path.join(
-            BASE_DIR,
-            name
-        )
+        path = BASE_DIR / name
 
-        if os.path.exists(path):
+        if path.exists():
 
             print(f"Loading index: {name}")
 
             vectorstores[name] = FAISS.load_local(
-                path,
+                str(path),
                 embedding_model,
                 allow_dangerous_deserialization=True
             )

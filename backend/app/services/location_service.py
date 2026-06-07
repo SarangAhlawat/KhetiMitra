@@ -1,11 +1,9 @@
 import requests
-# from app.core.logger import logger
+
+from app.core.config import OPENCAGE_API_KEY
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
-
-# Replace with your real API key
-API_KEY = "c000732ca8d74f79ab79e899e738b916"
 
 
 def get_location_details(lat: float, lon: float):
@@ -14,11 +12,15 @@ def get_location_details(lat: float, lon: float):
     district, state, village information
     """
 
+    if not OPENCAGE_API_KEY:
+        logger.error("OPENCAGE_API_KEY not set")
+        return None
+
     try:
 
         url = (
             "https://api.opencagedata.com/geocode/v1/json"
-            f"?q={lat}+{lon}&key={API_KEY}"
+            f"?q={lat}+{lon}&key={OPENCAGE_API_KEY}"
         )
 
         response = requests.get(

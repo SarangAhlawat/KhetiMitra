@@ -1,12 +1,7 @@
-from app.services.prompt_loader import load_prompt
-from app.services.prompt_formatter import format_prompt
+from app.services.prompt_loader import format_chat_prompt
 
-template = load_prompt(
-    "farmer_query_prompt.txt"
-)
-
-prompt = format_prompt(
-    template,
+prompt = format_chat_prompt(
+    "farmer_query_prompt.txt",
     context="Drip irrigation saves water.",
     question="How to reduce water usage?"
 )

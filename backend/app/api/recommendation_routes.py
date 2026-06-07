@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.services.ml_service import predict_crop
 from app.services.llm_service import generate_response
+from app.services.prompt_loader import load_guidelines
 from app.services.rule_engine import (
     get_practice_recommendations,
     get_scheme_recommendations,
@@ -96,8 +97,12 @@ def normalize_rule_profile(data: dict, crop: str) -> dict:
 def build_advisor_reason(data: dict, crop: str, qssm_score: float, practices: list[str], schemes: list[str]) -> str:
     prompt = f"""
 You are an agricultural decision advisor.
-Return only one short reason (max 35 words) for why this recommendation suits the farmer.
-Mention sustainability and one practical next step.
+
+{load_guidelines()}
+
+Task:
+- Return only one short reason (max 35 words) for why this recommendation suits the farmer.
+- Mention sustainability and one practical next step.
 
 Recommended crop: {crop}
 QSSM score: {qssm_score}

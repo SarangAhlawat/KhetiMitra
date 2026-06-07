@@ -3,14 +3,11 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-
-# Secret key (change later)
-
-SECRET_KEY = "supersecretkey123"
-
-ALGORITHM = "HS256"
-
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+from app.core.config import (
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    JWT_ALGORITHM,
+    SECRET_KEY,
+)
 
 
 pwd_context = CryptContext(
@@ -50,7 +47,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(
         to_encode,
         SECRET_KEY,
-        algorithm=ALGORITHM
+        algorithm=JWT_ALGORITHM,
     )
 
     return encoded_jwt

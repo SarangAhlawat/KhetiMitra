@@ -46,7 +46,8 @@ export default function ChatPage() {
         {
           id: Date.now() + 1,
           role: "assistant",
-          text: data.response || "I could not process that query right now."
+          text: data.response || "I could not process that query right now.",
+          reason: data.short_reason || ""
         }
       ]);
     } catch (error) {
@@ -80,7 +81,12 @@ export default function ChatPage() {
                   : "ml-auto border border-emerald-200/30 bg-emerald-400/15 text-emerald-50"
                   }`}
               >
-                {message.text}
+                <div className="whitespace-pre-wrap leading-relaxed">{message.text}</div>
+                {message.reason ? (
+                  <p className="mt-2 rounded-lg border border-cyan-200/20 bg-cyan-200/10 px-2 py-1 text-xs text-cyan-100">
+                    Reason: {message.reason}
+                  </p>
+                ) : null}
               </div>
             ))}
             {loading ? (

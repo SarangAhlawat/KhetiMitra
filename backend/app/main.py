@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import sys
 import os
+
+from app.core.config import CORS_ALLOW_ORIGIN_REGEX, CORS_ALLOW_ORIGINS
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
@@ -158,16 +160,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         origin.strip()
-        for origin in os.getenv(
-            "CORS_ALLOW_ORIGINS",
-            "http://localhost:5173,http://127.0.0.1:5173,https://khetimitra.vercel.app"
-        ).split(",")
+        for origin in CORS_ALLOW_ORIGINS.split(",")
         if origin.strip()
     ],
-    allow_origin_regex=os.getenv(
-        "CORS_ALLOW_ORIGIN_REGEX",
-        r"https://.*\.ngrok-free\.dev"
-    ),
+    allow_origin_regex=CORS_ALLOW_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

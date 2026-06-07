@@ -28,6 +28,14 @@ export default function AnalysisPage() {
   const [loading, setLoading] = useState(false);
 
   const recommendationHint = useMemo(() => {
+    if (explain?.short_reason) {
+      return explain.short_reason;
+    }
+
+    if (result?.short_reason) {
+      return result.short_reason;
+    }
+
     if (!result) {
       return "Run analysis to generate crop and sustainability insights.";
     }
@@ -41,7 +49,7 @@ export default function AnalysisPage() {
     }
 
     return "Risky sustainability profile. Immediate soil and water interventions recommended.";
-  }, [result]);
+  }, [result, explain]);
 
   const update = (field, value) => {
     setInput((prev) => ({ ...prev, [field]: Number(value) }));
@@ -128,7 +136,44 @@ export default function AnalysisPage() {
             <p className="mt-1 text-2xl font-semibold text-emerald-200">{result?.recommended_crop || "-"}</p>
             <p className="mt-4 text-sm text-slate-300">Sustainability Score</p>
             <p className="mt-1 text-2xl font-semibold text-cyan-200">{result?.sustainability_score ?? "-"}</p>
+            <p className="mt-2 rounded-xl border border-cyan-200/20 bg-cyan-300/10 p-3 text-xs text-cyan-50">
+              {explain?.qssm_reason || result?.qssm_reason || "QSSM reason will appear after analysis."}
+            </p>
             <p className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-slate-200">{recommendationHint}</p>
+          </GlassCard>
+
+          <GlassCard title="Matched Sustainable Actions">
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-semibold text-emerald-100">Practices</p>
+                {(explain?.sustainable_practices || result?.sustainable_practices || []).length ? (
+                  <ul className="mt-2 space-y-2 text-sm text-slate-200">
+                    {(explain?.sustainable_practices || result?.sustainable_practices || []).map((item, idx) => (
+                      <li key={`${item}-${idx}`} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-sm text-slate-300">No matched practices yet.</p>
+                )}
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-cyan-100">Schemes</p>
+                {(explain?.matching_schemes || result?.matching_schemes || []).length ? (
+                  <ul className="mt-2 space-y-2 text-sm text-slate-200">
+                    {(explain?.matching_schemes || result?.matching_schemes || []).map((item, idx) => (
+                      <li key={`${item}-${idx}`} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-sm text-slate-300">No matched schemes yet.</p>
+                )}
+              </div>
+            </div>
           </GlassCard>
 
           <GlassCard title="Explainability AI (Farmer-Friendly)">
