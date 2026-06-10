@@ -1,4 +1,4 @@
-# AI DSS — Sustainable Farming Decision Support System
+# AI DSS: Sustainable Farming Decision Support System
 
 An AI-powered decision support system for sustainable agriculture. It combines crop recommendation ML models, environmental intelligence (weather, soil, location), a QSSM sustainability score, government scheme matching, and a Gemini-backed RAG chat assistant.
 
@@ -59,7 +59,7 @@ Create and activate a virtual environment:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate        # Linux / macOS
-# .venv\Scripts\activate         # Windows
+# .venv\Scripts\activate         # For Windows
 ```
 
 Install Python dependencies:
